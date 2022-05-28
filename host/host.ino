@@ -156,14 +156,16 @@ void loop() {
       return;
     }
 
-    const unsigned long diff[4] = {
-      (unsigned long)abs(startedAt - userReactioned[0]),
-      (unsigned long)abs(startedAt - userReactioned[1]),
-      (unsigned long)abs(startedAt - userReactioned[2]),
-      (unsigned long)abs(startedAt - userReactioned[3])
+    const long diff[4] = {
+      (userReactioned[0] != 0 ? userReactioned[0] - startedAt : 0),
+      (userReactioned[1] != 0 ? userReactioned[1] - startedAt : 0),
+      (userReactioned[2] != 0 ? userReactioned[2] - startedAt : 0),
+      (userReactioned[3] != 0 ? userReactioned[3] - startedAt : 0)
     };
     int winner = 0;
+    Serial.println(diff[0]);
     for (int i = 1; i < 4; i++) {
+      Serial.println(diff[i]);
       if (diff[winner] > diff[i]) {
         winner = i;
       }
@@ -174,6 +176,9 @@ void loop() {
     M5.Lcd.setTextSize(1);
     M5.Lcd.println("Winner");
     M5.Lcd.println(username[winner]);
+    M5.Lcd.println(diff[winner] > 0 
+                    ? "+" + (String)(diff[winner] / 1000) + "." + (String)(diff[winner] % 1000)
+                    : (String)(diff[winner] / 1000) + "." + (String)(diff[winner] % 1000));
   }
   else if (M5.BtnA.wasPressed() && mode == _result) {
     M5.Lcd.fillScreen(BLACK);
